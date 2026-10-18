@@ -36,7 +36,7 @@ systemctl --user daemon-reload
 systemctl --user enable --now hyprshade-auto.timer
 ```
         
-
+`
 ❓ HOW IT WORKS ❓  
 Run hyprshade-auto.sh  
           │  
@@ -51,7 +51,7 @@ Automatic Disabled    Always On
 19:00–06:59  Shader    Shader  
 Shader ON    OFF       ON  
 Daytime OFF  
-
+`
 
 ## [`hyprshade-auto.sh`]
 
