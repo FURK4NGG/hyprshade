@@ -1,6 +1,6 @@
 👀 hyprshade Overview  
 
-hyprshade is a Bash utility for controlling a Hyprshade shader with
+**hyprshade** is a Bash utility for controlling a Hyprshade shader with
 three modes: automatic scheduling, disabled, and always enabled. In
 automatic mode, it enables the shader at night and disables it during
 the day.
