@@ -6,6 +6,7 @@ the day.
 
 
 ✅ Works On
+!hyprshade, version 4.0.1
 Hyprland with hyprshade and systemd --user
 ⚠️ Compatibility
 Other Wayland compositors and desktop environments have not been
