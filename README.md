@@ -1,4 +1,4 @@
-👀 hyprshade Overview
+👀 hyprshade Overview  
 hyprshade is a Bash utility for controlling a Hyprshade shader with
 three modes: automatic scheduling, disabled, and always enabled. In
 automatic mode, it enables the shader at night and disables it during
@@ -14,23 +14,26 @@ verified.
 
 
 🚀 Features
-- [x] Three-state toggle: automatic, disabled, and always enabled
-- [x] Automatically enables the shader from 19:00 to 06:59
-- [x] Disables the shader during daytime in automatic mode
-- [x] Uses a user-level systemd timer for scheduled updates
-- [x] Sends desktop notifications when the mode changes
-- [x] Stores the current mode in a state file
-- [x] Supports command-line usage and a help message
-- [x] Provides a time argument for refreshing the automatic mode
 
-# Setup
+- [x] Three-state toggle: automatic, disabled, and always enabled  
+- [x] Automatically enables the shader from 19:00 to 06:59  
+- [x] Disables the shader during daytime in automatic mode  
+- [x] Uses a user-level systemd timer for scheduled updates  
+- [x] Sends desktop notifications when the mode changes  
+- [x] Stores the current mode in a state file  
+- [x] Supports command-line usage and a help message  
+- [x] Provides a time argument for refreshing the automatic mode  
+
+## 📦 Setup
+
+```
 sudo cp -f ~/.config/scripts/hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
 sudo chmod +x ~/.local/bin/hyprshade-auto.sh
 sudo chmod 600 ~/.config/scripts/hyprshade-toggle-state
 sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
 systemctl --user daemon-reload
 systemctl --user enable --now hyprshade-auto.timer
-
+```
         
 
 ❓ HOW IT WORKS ❓
