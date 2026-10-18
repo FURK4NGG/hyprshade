@@ -23,6 +23,15 @@ verified.
 - [x] Supports command-line usage and a help message
 - [x] Provides a time argument for refreshing the automatic mode
 
+# Setup
+sudo cp -f ~/.config/scripts/hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
+sudo chmod +x ~/.local/bin/hyprshade-auto.sh
+sudo chmod 600 ~/.config/scripts/hyprshade-toggle-state
+sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
+systemctl --user daemon-reload
+systemctl --user enable --now hyprshade-auto.timer
+
+        
 
 ❓ HOW IT WORKS ❓
 Run hyprshade-auto.sh
