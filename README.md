@@ -4,7 +4,11 @@ hyprshade is a Bash utility for controlling a Hyprshade shader with
 three modes: automatic scheduling, disabled, and always enabled. In
 automatic mode, it enables the shader at night and disables it during
 the day.
+<br><br>
 
+![hyprshade Demo GIF](https://github.com/FURK4NGG/hyprshade/blob/main/%7B%7D/hyprshade.gif)
+
+<br><br>
 
 ✅ Works On
 !hyprshade, version 4.0.1
