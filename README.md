@@ -10,13 +10,13 @@ the day.
 
 <br><br>
 
-✅ Works On
-!hyprshade, version 4.0.1
-Hyprland with hyprshade and systemd --user
-⚠️ Compatibility
-Other Wayland compositors and desktop environments have not been
-verified.
+✅ Works On  
+- Linux distributions: Arch Linux, Debian, Fedora  
+- Wayland compositors: Hyprland, Sway, and other wlroots-based compositors  
 
+⚠️ Compatibility  
+Other Wayland compositors and desktop environments have not been verified yet.
+<br><br>
 
 🚀 Features
 
