@@ -32,6 +32,8 @@ verified.
 ## 📦 Setup
 
 ```
+`Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
+
 sudo cp -f ~/.config/scripts/hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
 sudo chmod +x ~/.local/bin/hyprshade-auto.sh
 sudo chmod 600 ~/.config/scripts/hyprshade-toggle-state
@@ -39,7 +41,15 @@ sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
 systemctl --user daemon-reload
 systemctl --user enable --now hyprshade-auto.timer
 ```
-        
+<br><br>
+
+## 🎉 Run
+
+```
+~/.local/bin/hyprshade-auto.sh
+```
+<br><br>
+   
 ```
 ❓ HOW IT WORKS ❓  
 Run hyprshade-auto.sh  
