@@ -46,11 +46,26 @@ sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
 systemctl --user daemon-reload
 systemctl --user enable --now hyprshade-auto.timer
 ```
+<br><br>
 
 Arch
 ```
 sudo pacman -S --needed python python-pip
 ```
+<br>
+
+Debian / Ubuntu
+```
+sudo apt update
+sudo apt install --needed python3 python3-pip python3-venv pipx unzip
+```
+<br>
+
+Fedora
+```
+sudo dnf install python3 python3-pip python3-pipx unzip
+```
+<br><br>
 
 ```
 cd ~/Downloads
