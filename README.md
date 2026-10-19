@@ -39,7 +39,7 @@ cd hyprshade
 mkdir -p ~/.local/bin
 sudo mkdir -p ~/.config/scripts/
 sudo chmod +x ~/.config/scripts/*.sh
-sudo cp -f ~/.config/scripts/hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
+sudo cp -f ./hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
 sudo chmod +x ~/.local/bin/hyprshade-auto.sh
 sudo chmod 600 ~/.config/scripts/hyprshade-toggle-state
 sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
