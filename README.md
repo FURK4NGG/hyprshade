@@ -34,6 +34,11 @@ Other Wayland compositors and desktop environments have not been verified yet.
 
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
 ```
+git clone https://github.com/FURK4NGG/hyprshade.git
+cd hyprshade
+mkdir -p ~/.local/bin
+sudo mkdir -p ~/.config/scripts/
+sudo chmod +x ~/.config/scripts/*.sh
 sudo cp -f ~/.config/scripts/hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
 sudo chmod +x ~/.local/bin/hyprshade-auto.sh
 sudo chmod 600 ~/.config/scripts/hyprshade-toggle-state
@@ -41,6 +46,12 @@ sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
 systemctl --user daemon-reload
 systemctl --user enable --now hyprshade-auto.timer
 ```
+
+Arch
+```
+sudo pacman -S --needed python python-pip
+```
+
 <br><br>
 
 ## 🎉 Run
