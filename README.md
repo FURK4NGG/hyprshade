@@ -31,9 +31,9 @@ verified.
 
 ## 📦 Setup
 
-```
-`Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
 
+`Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
+```
 sudo cp -f ~/.config/scripts/hyprshade-auto.sh ~/.local/bin/hyprshade-auto.sh
 sudo chmod +x ~/.local/bin/hyprshade-auto.sh
 sudo chmod 600 ~/.config/scripts/hyprshade-toggle-state
