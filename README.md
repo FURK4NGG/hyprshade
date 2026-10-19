@@ -18,7 +18,7 @@ the day.
 Other Wayland compositors and desktop environments have not been verified yet.
 <br><br>
 
-🚀 Features
+## 🚀 Features
 
 - [x] Three-state toggle: automatic, disabled, and always enabled  
 - [x] Automatically enables the shader from 19:00 to 06:59  
