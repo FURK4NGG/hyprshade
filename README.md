@@ -36,6 +36,7 @@ Other Wayland compositors and desktop environments have not been verified yet.
 
 <details>
 <summary>Arch</summary>
+   
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
 ```
 git clone https://github.com/FURK4NGG/hyprshade.git
@@ -59,6 +60,7 @@ sudo pacman -S --needed python python-pip python-pipx
 
 <details>
 <summary>Debian / Ubuntu</summary>
+   
 ```
 sudo apt update
 sudo apt install -y python3-gi gir1.2-gtk-3.0 python3-cairo libnotify-bin xcompmgr
