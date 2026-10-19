@@ -52,6 +52,17 @@ Arch
 sudo pacman -S --needed python python-pip
 ```
 
+```
+cd ~/Downloads
+unzip hyprshade-4.0.1.zip
+cd hyprshade-4.0.1
+sudo pacman -S --needed python-pipx
+pipx install .
+```
+
+hyprshade --version
+>hyprshade, version 4.0.1
+
 <br><br>
 
 ## 🎉 Run
