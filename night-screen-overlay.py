@@ -71,6 +71,26 @@ def run():
     if visual is None:
         raise SystemExit("RGBA visual is unavailable.")
 
+    # Wait until the X11 compositor is ready.
+    def wait_for_compositor():
+        screen = Gdk.Screen.get_default()
+
+        if screen is not None and screen.is_composited():
+            create_overlay()
+            return GLib.SOURCE_REMOVE
+
+        return GLib.timeout_add(500, wait_for_compositor)
+
+    def create_overlay():
+        build_overlay(screen, visual)
+
+    def build_overlay(screen, visual):
+        # The overlay window is created only after compositing is active.
+        create_window(screen, visual)
+
+    def create_window(screen, visual):
+        pass
+
     window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
     window.set_title("Night Screen Overlay")
     window.set_visual(visual)
