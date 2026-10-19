@@ -32,6 +32,10 @@ Other Wayland compositors and desktop environments have not been verified yet.
 ## 📦 Setup
 
 
+<br>
+
+<details>
+<summary>Arch</summary>
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
 ```
 git clone https://github.com/FURK4NGG/hyprshade.git
@@ -46,19 +50,46 @@ sudo chown $USER:$USER ~/.config/scripts/hyprshade-toggle-state
 systemctl --user daemon-reload
 systemctl --user enable --now hyprshade-auto.timer
 ```
-<br><br>
 
-Arch
 ```
 sudo pacman -S --needed python python-pip python-pipx
 ```
+</details>
 <br>
 
-Debian / Ubuntu
+<details>
+<summary>Debian / Ubuntu</summary>
 ```
 sudo apt update
-sudo apt install --needed python3 python3-pip python3-venv pipx unzip
+sudo apt install -y python3-gi gir1.2-gtk-3.0 python3-cairo libnotify-bin xcompmgr
 ```
+```
+mkdir -p ~/.local/bin ~/.config/scripts ~/.config/systemd/user
+
+cp bin/night-screen-overlay.py ~/.local/bin/
+cp bin/hyprshade-auto.sh ~/.local/bin/
+
+cp systemd/hyprshade-auto.service ~/.config/systemd/user/
+cp systemd/hyprshade-auto.timer ~/.config/systemd/user/
+
+chmod +x ~/.local/bin/night-screen-overlay.py
+chmod +x ~/.local/bin/hyprshade-auto.sh
+```
+## Run
+```
+~/.local/bin/hyprshade-auto.sh
+```
+or  
+Start filter
+```
+python3 ~/.local/bin/night-screen-overlay.py start
+```
+<br>
+Stop filter  
+```
+python3 ~/.local/bin/night-screen-overlay.py stop
+```
+</details>
 <br>
 
 Fedora
