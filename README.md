@@ -50,7 +50,7 @@ systemctl --user enable --now hyprshade-auto.timer
 
 Arch
 ```
-sudo pacman -S --needed python python-pip
+sudo pacman -S --needed python python-pip python-pipx
 ```
 <br>
 
@@ -71,7 +71,6 @@ sudo dnf install python3 python3-pip python3-pipx unzip
 cd ~/Downloads
 unzip hyprshade-4.0.1.zip
 cd hyprshade-4.0.1
-sudo pacman -S --needed python-pipx
 pipx install .
 ```
 
