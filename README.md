@@ -68,11 +68,11 @@ sudo apt install -y python3-gi gir1.2-gtk-3.0 python3-cairo libnotify-bin xcompm
 ```
 mkdir -p ~/.local/bin ~/.config/scripts ~/.config/systemd/user
 
-cp bin/night-screen-overlay.py ~/.local/bin/
-cp bin/hyprshade-auto.sh ~/.local/bin/
+cp ./night-screen-overlay.py ~/.local/bin/
+cp ./hyprshade-auto.sh ~/.local/bin/
 
-cp systemd/hyprshade-auto.service ~/.config/systemd/user/
-cp systemd/hyprshade-auto.timer ~/.config/systemd/user/
+cp ./hyprshade-auto.service ~/.config/systemd/user/
+cp ./hyprshade-auto.timer ~/.config/systemd/user/
 
 chmod +x ~/.local/bin/night-screen-overlay.py
 chmod +x ~/.local/bin/hyprshade-auto.sh
@@ -82,12 +82,15 @@ chmod +x ~/.local/bin/hyprshade-auto.sh
 ~/.local/bin/hyprshade-auto.sh
 ```
 or  
+
 Start filter
+
 ```
 python3 ~/.local/bin/night-screen-overlay.py start
 ```
 <br>
 Stop filter  
+
 ```
 python3 ~/.local/bin/night-screen-overlay.py stop
 ```
