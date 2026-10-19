@@ -1,108 +1,71 @@
 #!/bin/bash
 
 STATE_FILE="$HOME/.config/scripts/hyprshade-toggle-state"
-SHADER="night_screen"
+OVERLAY="$HOME/.local/bin/night-screen-overlay.py"
 ARG="${1:-}"
-HOUR=$(date +%H)
 
-mkdir -p "$(dirname "$STATE_FILE")" || exit 1
+export DISPLAY="${DISPLAY:-:0}"
+export XAUTHORITY="${XAUTHORITY:-$HOME/.Xauthority}"
+
+mkdir -p "$(dirname "$STATE_FILE")"
+
 if [ ! -f "$STATE_FILE" ]; then
-    printf '0\n' > "$STATE_FILE" || exit 1
-    chmod 600 "$STATE_FILE"
+    printf '0\n' > "$STATE_FILE"
 fi
 
 STATE=$(cat "$STATE_FILE")
 
+apply_filter() {
+    python3 "$OVERLAY" start
+}
+
+disable_filter() {
+    python3 "$OVERLAY" stop
+}
+
 apply_auto() {
     HOUR=$(date +%H)
+
     if [ "$HOUR" -ge 19 ] || [ "$HOUR" -lt 7 ]; then
-        hyprshade on "$SHADER"
+        apply_filter
     else
-        hyprshade off
+        disable_filter
     fi
 }
 
-# The systemd timer calls this with "time". It must apply the current
-# mode without changing the saved mode or sending a toggle notification.
 if [ "$ARG" = "time" ]; then
     case "$STATE" in
-        0)
-            apply_auto || exit 1
-            echo "Night Screen called"
-            ;;
-        1)
-            hyprshade off
-            ;;
-        2)
-            hyprshade on "$SHADER"
-            ;;
+        0) apply_auto ;;
+        1) disable_filter ;;
+        2) apply_filter ;;
         *)
-            echo "Invalid Night Screen state: $STATE" >&2
+            echo "Invalid state: $STATE" >&2
             exit 1
             ;;
     esac
     exit $?
 fi
 
-if [ -n "$ARG" ]; then
-    case "$ARG" in
-        exec-start)
-            # Preserve the existing exec-start behavior as a mode cycle.
-            case "$STATE" in
-                1) NEXT=2 ;; # disabled -> always on
-                2) NEXT=0 ;; # always on -> automatic
-                0) NEXT=1 ;; # automatic -> disabled
-                *) NEXT=1 ;;
-            esac
-            ;;
-        -h|help|-help|--help)
-            echo "Kullanim/Usage:"
-            echo "  $0        -> Toggle Night Screen   (kapali/hep acik/otomatik) , (disabled/always on/automatic)"
-            echo "  $0 time   -> Recall Auto Night Screen (execute once per hour)  !sadece otomatik moddayken calisir/works only in auto mode!"
-            exit 0
-            ;;
-        *)
-            echo "Kullanim/Usage:"
-            echo "  $0        -> Toggle Night Screen   (kapali/hep acik/otomatik) , (disabled/always on/automatic)"
-            echo "  $0 time   -> Recall Auto Night Screen (execute once per hour)  !sadece otomatik moddayken calisir/works only in auto mode!"
-            exit 0
-            ;;
-    esac
-else
-    # Requested cycle: disabled -> always on -> automatic -> disabled.
-    case "$STATE" in
-        1) NEXT=2 ;;
-        2) NEXT=0 ;;
-        0) NEXT=1 ;;
-        *) NEXT=1 ;;
-    esac
-fi
+case "$STATE" in
+    0) NEXT=1 ;;
+    1) NEXT=2 ;;
+    2) NEXT=0 ;;
+    *) NEXT=1 ;;
+esac
 
-printf '%s\n' "$NEXT" > "$STATE_FILE" || exit 1
+printf '%s\n' "$NEXT" > "$STATE_FILE"
 
 case "$NEXT" in
     0)
-        # AUTOMATIC
-        systemctl --user daemon-reload
-        systemctl --user enable --now hyprshade-auto.timer
-        if ! apply_auto; then
-            exit 1
-        fi
-        notify-send "Night Screen" "auto mode is active"
-        echo "Night Screen auto mode is active"
+        apply_auto || exit 1
+        notify-send "Night Screen" "Automatic mode enabled"
         ;;
     1)
-        # DISABLED
-        systemctl --user stop hyprshade-auto.timer || true
-        hyprshade off || exit 1
-        notify-send "Night Screen" "effect is deactive"
-        echo "Night Screen effect is deactive"
+        disable_filter || exit 1
+        notify-send "Night Screen" "Filter disabled"
         ;;
     2)
-        # ALWAYS ON
-        systemctl --user stop hyprshade-auto.timer || true
-        hyprshade on "$SHADER" || exit 1
-        notify-send "Night Screen" "effect is active"
-        echo "Night Screen effect is active"
+        apply_filter || exit 1
+        notify-send "Night Screen" "Filter always enabled"
         ;;
 esac

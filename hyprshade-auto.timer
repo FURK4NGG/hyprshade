@@ -1,0 +1,10 @@
+[Unit]
+Description=Check Night Screen Filter Schedule
+
+[Timer]
+OnStartupSec=30s
+OnUnitActiveSec=1min
+Unit=hyprshade-auto.service
+
+[Install]
+WantedBy=timers.target
