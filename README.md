@@ -50,8 +50,9 @@ systemctl --user enable --now hyprshade-auto.timer
 ```
 <br><br>
    
+
+## ❓ HOW IT WORKS ❓  
 ```
-❓ HOW IT WORKS ❓  
 Run hyprshade-auto.sh  
           │  
           ▼  
