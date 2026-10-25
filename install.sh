@@ -166,7 +166,8 @@ fi
 printf '\n====================================\n'
 printf "${GREEN}Installation completed.${RESET}\n"
 printf 'Hyprshade: %s\n' "$VERSION_OUTPUT"
+printf 'Toggle native hyprland: %s\n' "$SCRIPT_DST backend native"
+printf 'Toggle screen overlay: %s\n' "$SCRIPT_DST backend overlay"
 printf 'Toggle script: %s\n' "$SCRIPT_DST"
-printf 'Overlay script: %s\n' "$OVERLAY_DST"
 printf 'State file (runtime-generated): %s\n' "$STATE_FILE"
 printf '====================================\n'
