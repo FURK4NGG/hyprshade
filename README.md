@@ -79,8 +79,8 @@ Directory Structure
 └── hyprshade-auto.timer  
 
 ~/.local/bin/  
-├── night-screen-overlay.py  
-└── hyprshade-auto.sh  
+├── hyprshade-auto.sh  
+└── night-screen-overlay.py  
 <br>
 
 ```
