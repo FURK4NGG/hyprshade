@@ -83,7 +83,7 @@ chmod +x ~/.local/bin/hyprshade-auto.sh
 
 ```
 
-## Run
+## 🎉 Run
 ```
 ~/.local/bin/hyprshade-auto.sh
 ```
