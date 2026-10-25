@@ -144,6 +144,49 @@ sudo dnf install python3 python3-pip python3-pipx unzip
 
 ## 🎉 Run
 
+## Rendering Backend
+
+Hyprshade Night Screen supports two rendering backends. Choose the one that best fits your needs.
+
+### 1. Native Hyprshade (Recommended)
+
+Uses Hyprshade to apply the shader directly through the compositor. This method does not require the Python overlay.
+
+```bash
+~/.local/bin/hyprshade-auto.sh backend native
+```
+
+**Recommended for:** Arch Linux and Hyprland users who want to apply the night screen filter natively.
+
+### 2. Screen Overlay
+
+Uses `night-screen-overlay.py` to display a separate overlay layer on the screen.
+
+```bash
+~/.local/bin/hyprshade-auto.sh backend overlay
+```
+
+**Requirements:** The `night-screen-overlay.py` script must be installed at `~/.local/bin/night-screen-overlay.py`, along with its required dependencies.
+
+**Recommended for:** Systems where the separate overlay implementation is preferred or required.
+
+### Switching Backends
+
+You can switch between backends at any time by running the corresponding command. The selected backend is saved and reused by automatic mode.
+
+After selecting a backend, use the regular toggle command to cycle through the operating modes:
+
+```bash
+~/.local/bin/hyprshade-auto.sh
+```
+
+The operating modes are:
+
+- **Automatic:** Applies the filter between 19:00 and 07:00.
+- **Disabled:** Turns the filter off.
+- **Always On:** Keeps the filter enabled regardless of the time.
+
+
 ```
 ~/.local/bin/hyprshade-auto.sh
 ```
