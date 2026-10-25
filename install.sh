@@ -45,13 +45,13 @@ printf '%s\n' \
 step "Checking source files"
 
 command -v pacman >/dev/null 2>&1 ||
-    die "pacman bulunamadı. Bu kurulum Arch Linux içindir."
+    die "pacman was not found. This installer is intended for Arch Linux."
 
 [[ -f "$SCRIPT_SRC" ]] ||
-    die "Depoda hyprshade-auto.sh bulunamadı: $SCRIPT_SRC"
+    die "hyprshade-auto.sh was not found in the repository: $SCRIPT_SRC"
 
 [[ -f "$OVERLAY_SRC" ]] ||
-    die "Depoda night-screen-overlay.py bulunamadı: $OVERLAY_SRC"
+    die "night-screen-overlay.py was not found in the repository: $OVERLAY_SRC"
 
 # Do not generate service/timer files. If they are not in the repository,
 # the installer will skip timer setup rather than creating its own files.
@@ -72,7 +72,7 @@ step "Checking Hyprshade"
 export PATH="$HOME/.local/bin:$HOME/.local/pipx/bin:$PATH"
 
 if ! command -v hyprshade >/dev/null 2>&1; then
-    warn "Hyprshade bulunamadı; 4.0.1 sürümü pipx ile kurulacak."
+    warn "Hyprshade was not found; version 4.0.1 will be installed using pipx."
 
     TMP_DIR="$(mktemp -d)"
     trap 'rc=$?; rm -rf "${TMP_DIR:-}"; if (( rc != 0 )); then err "Installation stopped (line: $LINENO, exit code: $rc)."; fi; exit "$rc"' EXIT
@@ -83,18 +83,18 @@ if ! command -v hyprshade >/dev/null 2>&1; then
 
     HYPRSHADE_SOURCE="$TMP_DIR/hyprshade-4.0.1"
     [[ -d "$HYPRSHADE_SOURCE" ]] ||
-        die "İndirilen arşivde hyprshade-4.0.1 dizini bulunamadı."
+        die "The downloaded archive does not contain the hyprshade-4.0.1 directory."
 
     pipx install "$HYPRSHADE_SOURCE"
     export PATH="$HOME/.local/bin:$HOME/.local/pipx/bin:$PATH"
 fi
 
 command -v hyprshade >/dev/null 2>&1 ||
-    die "Hyprshade PATH üzerinde bulunamadı."
+    die "Hyprshade was not found on PATH."
 
 VERSION_OUTPUT="$(hyprshade --version 2>&1)"
 printf '%s\n' "$VERSION_OUTPUT"
-ok "Hyprshade erişilebilir."
+ok "Hyprshade is available."
 
 step "Installing repository files (overwrite existing files)"
 
@@ -112,7 +112,7 @@ if [[ -n "$SHADER_SRC" ]]; then
     install -m 644 "$SHADER_SRC" "$SHADER_DIR/$SHADER_NAME"
     ok "Installed shader: $SHADER_DIR/$SHADER_NAME"
 else
-    warn "$SHADER_NAME depoda bulunamadı; shader dosyası oluşturulmadı."
+    warn "$SHADER_NAME was not found in the repository; no shader file was created."
 fi
 
 step "Applying permissions"
@@ -144,7 +144,7 @@ if [[ -f "$SERVICE_SRC" ]]; then
     ok "Installed existing service: $SERVICE_DST"
     SYSTEMD_FILES_INSTALLED=1
 else
-    warn "hyprshade-auto.service depoda yok; dosya oluşturulmadı."
+    warn "hyprshade-auto.service was not found in the repository; no file was created."
 fi
 
 if [[ -f "$TIMER_SRC" ]]; then
@@ -152,15 +152,15 @@ if [[ -f "$TIMER_SRC" ]]; then
     ok "Installed existing timer: $TIMER_DST"
     SYSTEMD_FILES_INSTALLED=1
 else
-    warn "hyprshade-auto.timer depoda yok; dosya oluşturulmadı."
+    warn "hyprshade-auto.timer was not found in the repository; no file was created."
 fi
 
 if [[ -f "$SERVICE_DST" && -f "$TIMER_DST" ]]; then
     systemctl --user daemon-reload
     systemctl --user enable --now hyprshade-auto.timer
-    ok "hyprshade-auto.timer etkinleştirildi."
+    ok "hyprshade-auto.timer has been enabled."
 else
-    warn "Servis ve timer dosyalarının ikisi de mevcut olmadığı için timer etkinleştirilmedi. Installer bu dosyaları kendisi oluşturmaz."
+    warn "The timer was not enabled because both the service and timer files are not available. The installer does not create these files."
 fi
 
 printf '\n====================================\n'
