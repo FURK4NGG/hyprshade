@@ -186,10 +186,6 @@ The operating modes are:
 - **Disabled:** Turns the filter off.
 - **Always On:** Keeps the filter enabled regardless of the time.
 
-
-```
-~/.local/bin/hyprshade-auto.sh
-```
 <br><br>
    
 
