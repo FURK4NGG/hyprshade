@@ -46,6 +46,17 @@ Directory Structure
 <br>
    
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
+
+```
+cd ~/Downloads
+unzip hyprshade-4.0.1.zip
+cd hyprshade-4.0.1
+pipx install .
+```
+
+hyprshade --version
+>hyprshade, version 4.0.1
+
 ```
 cd ~
 git clone https://github.com/FURK4NGG/hyprshade.git
@@ -93,11 +104,11 @@ cd hyprshade
 
 mkdir -p ~/.local/bin ~/.config/scripts ~/.config/systemd/user
 
-cp ./night-screen-overlay.py ~/.local/bin/
-cp ./hyprshade-auto.sh ~/.local/bin/
+cp -f ./night-screen-overlay.py ~/.local/bin/
+cp -f ./hyprshade-auto.sh ~/.local/bin/
 
-cp ./hyprshade-auto.service ~/.config/systemd/user/
-cp ./hyprshade-auto.timer ~/.config/systemd/user/
+cp -f ./hyprshade-auto.service ~/.config/systemd/user/
+cp -f ./hyprshade-auto.timer ~/.config/systemd/user/
 
 chmod +x ~/.local/bin/night-screen-overlay.py
 chmod +x ~/.local/bin/hyprshade-auto.sh
@@ -129,18 +140,6 @@ Fedora
 ```
 sudo dnf install python3 python3-pip python3-pipx unzip
 ```
-<br><br>
-
-```
-cd ~/Downloads
-unzip hyprshade-4.0.1.zip
-cd hyprshade-4.0.1
-pipx install .
-```
-
-hyprshade --version
->hyprshade, version 4.0.1
-
 <br><br>
 
 ## 🎉 Run
