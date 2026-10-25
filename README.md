@@ -167,31 +167,73 @@ Shader ON    OFF       ON
 Daytime OFF  
 ```
 
-## [`hyprshade-auto.sh`]
+## [`hyprshade-auto.sh`]  
 
 - Toggles between automatic, disabled, and always-on shader modes.  
-  Otomatik, kapalı ve sürekli açık shader modları arasında geçiş yapar.
+  Otomatik, kapalı ve sürekli açık shader modları arasında geçiş yapar.  
 
 - Automatically enables the shader at night and disables it during the day.  
-  Shader efektini gece otomatik olarak etkinleştirir, gündüz devre dışı bırakır.
-
-- Manages the `hyprshade-auto.timer` and related user services.  
-  `hyprshade-auto.timer` ve ilgili kullanıcı servislerini yönetir.
+  Shader efektini gece otomatik olarak etkinleştirir, gündüz devre dışı bırakır.  
 
 - Saves the current mode in a state file.  
-  Mevcut modu bir durum dosyasına kaydeder.
+  Mevcut modu bir durum dosyasına kaydeder.  
 
 - Sends desktop notifications when the shader mode changes.  
-  Shader modu değiştiğinde masaüstü bildirimleri gönderir.
+  Shader modu değiştiğinde masaüstü bildirimleri gönderir.  
 
-- Supports command-line arguments and a help message.  
-  Komut satırı argümanlarını ve yardım mesajını destekler.
-
-- Provides a `time` argument to refresh the automatic mode.  
-  Otomatik modu yenilemek için `time` argümanını sunar.
+- Supports the `time` argument to apply the current mode without changing it.  
+  Mevcut modu değiştirmeden uygulamak için `time` argümanını destekler.  
 
 - Uses `night_screen.frag` as the shader file.  
-  Shader dosyası olarak `night_screen.frag` dosyasını kullanır.
+  Shader dosyası olarak `night_screen.frag` dosyasını kullanır.  
+
+
+## [`night_screen.frag`]  
+
+- Defines the visual shader effect applied to the screen.  
+  Ekrana uygulanan görsel shader efektini tanımlar.  
+
+- Applies a color filter to give the screen a warmer appearance.  
+  Ekrana daha sıcak bir görünüm kazandırmak için renk filtresi uygular.  
+
+- Determines how screen colors are modified by the shader.  
+  Ekran renklerinin shader tarafından nasıl değiştirileceğini belirler.  
+
+
+## [`hyprshade-auto.service`]  
+
+- Defines the systemd user service for checking the current shader mode.  
+  Mevcut shader modunu kontrol eden systemd kullanıcı servisini tanımlar.  
+
+- Runs `hyprshade-auto.sh` with the `time` argument.  
+  `hyprshade-auto.sh` dosyasını `time` argümanıyla çalıştırır.  
+
+- Applies the current mode without manually switching between modes.  
+  Modlar arasında manuel geçiş yapmadan mevcut modu uygular.  
+
+
+## [`hyprshade-auto.timer`]  
+
+- Runs the shader mode check periodically.  
+  Shader modu kontrolünü belirli aralıklarla çalıştırır.  
+
+- Checks the current mode every minute.  
+  Mevcut modu her dakika kontrol eder.  
+
+- Starts the timer automatically when enabled.  
+  Etkinleştirildiğinde zamanlayıcıyı otomatik olarak başlatır.  
+
+
+## [`hyprshade-toggle-state`]  
+
+- Stores the currently selected shader mode.  
+  Seçili shader modunu kaydeder.  
+
+- Keeps track of whether automatic, disabled, or always-on mode is selected.  
+  Otomatik, kapalı veya sürekli açık modlardan hangisinin seçili olduğunu takip eder.  
+
+- Allows the script to preserve the selected mode between executions.    
+  Betiğin seçili modu sonraki çalıştırmalarda da korumasını sağlar.  
 
 
 # Fast Installation  
