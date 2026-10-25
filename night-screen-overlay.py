@@ -2,21 +2,55 @@
 
 import os
 import sys
+import time
 import signal
 import subprocess
 from pathlib import Path
 
 import gi
-import cairo
-
 gi.require_version("Gtk", "3.0")
 gi.require_version("Gdk", "3.0")
 
 from gi.repository import Gtk, Gdk, GLib
+import cairo
 
-BASE = Path.home() / ".config" / "scripts"
+BASE = Path.home() / ".cache"
 PID_FILE = BASE / "night-screen-overlay.pid"
-OPACITY = 0.20
+LOG_FILE = BASE / "night-screen-overlay.log"
+
+# Filtre ayarlari
+OPACITY = 0.12
+
+# Acik turuncu
+RED = 1.00
+GREEN = 0.60
+BLUE = 0.28
+
+
+def is_running(pid):
+    try:
+        os.kill(int(pid), 0)
+        return True
+    except (ProcessLookupError, ValueError):
+        return False
+    except PermissionError:
+        return True
+
+
+def stop():
+    if not PID_FILE.exists():
+        print("Night Screen overlay stopped.")
+        return
+
+    try:
+        pid = int(PID_FILE.read_text().strip())
+
+        if pid != os.getpid() and is_running(pid):
+            os.kill(pid, signal.SIGTERM)
+    except (ValueError, OSError):
+        pass
+
+    print("Night Screen overlay stopped.")
 
 
 def start():
@@ -24,147 +58,203 @@ def start():
 
     if PID_FILE.exists():
         try:
-            pid = int(PID_FILE.read_text().strip())
-            os.kill(pid, 0)
-            print("Night Screen overlay is already running.")
-            return
+            old_pid = int(PID_FILE.read_text().strip())
+
+            if is_running(old_pid):
+                print("Night Screen overlay is already running.")
+                return
+
         except (ValueError, OSError):
-            PID_FILE.unlink(missing_ok=True)
+            pass
+
+        PID_FILE.unlink(missing_ok=True)
 
     env = os.environ.copy()
     env.setdefault("DISPLAY", ":0")
     env.setdefault("XAUTHORITY", str(Path.home() / ".Xauthority"))
 
-    subprocess.Popen(
-        [sys.executable, str(Path(__file__).resolve()), "run"],
-        stdin=subprocess.DEVNULL,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        start_new_session=True,
-        env=env,
-    )
+    with open(LOG_FILE, "a", encoding="utf-8") as log:
+        log.write("Starting overlay process.\n")
+        log.flush()
 
-    print("Night Screen overlay started.")
+        process = subprocess.Popen(
+            [sys.executable, str(Path(__file__).resolve()), "run"],
+            stdin=subprocess.DEVNULL,
+            stdout=log,
+            stderr=subprocess.STDOUT,
+            start_new_session=True,
+            env=env,
+        )
 
-
-def stop():
-    if PID_FILE.exists():
-        try:
-            pid = int(PID_FILE.read_text().strip())
-            os.kill(pid, signal.SIGTERM)
-        except (ValueError, OSError):
-            pass
-
-        PID_FILE.unlink(missing_ok=True)
-
-    print("Night Screen overlay stopped.")
+    PID_FILE.write_text(str(process.pid))
+    print("Night Screen overlay start requested.")
 
 
 def run():
+    os.environ.setdefault("DISPLAY", ":0")
+    os.environ.setdefault(
+        "XAUTHORITY",
+        str(Path.home() / ".Xauthority")
+    )
+
     BASE.mkdir(parents=True, exist_ok=True)
+    PID_FILE.write_text(str(os.getpid()))
 
     screen = Gdk.Screen.get_default()
+
     if screen is None:
-        raise SystemExit("Cannot access X11 screen.")
+        print("ERROR: No graphical display available.")
+        return 1
 
-    visual = screen.get_rgba_visual()
-    if visual is None:
-        raise SystemExit("RGBA visual is unavailable.")
+    session_type = os.environ.get("XDG_SESSION_TYPE", "").lower()
+    is_wayland = (
+        session_type == "wayland"
+        or bool(os.environ.get("WAYLAND_DISPLAY"))
+    )
 
-    # Wait until the X11 compositor is ready.
-    def wait_for_compositor():
-        screen = Gdk.Screen.get_default()
+    # X11 icin compositor kontrolu
+    if not is_wayland and not screen.is_composited():
+        print("Starting X11 compositor...")
 
-        if screen is not None and screen.is_composited():
-            create_overlay()
-            return GLib.SOURCE_REMOVE
+        subprocess.run(
+            ["pkill", "-x", "xcompmgr"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
 
-        return GLib.timeout_add(500, wait_for_compositor)
+        time.sleep(1)
+
+        with open(LOG_FILE, "a", encoding="utf-8") as log:
+            subprocess.Popen(
+                [
+                    "xcompmgr",
+                    "-c", "-C",
+                    "-t-5", "-l-5",
+                    "-r4", "-o0.8"
+                ],
+                stdin=subprocess.DEVNULL,
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                start_new_session=True,
+                env=os.environ.copy(),
+            )
+
+    started = time.monotonic()
+    window = None
+
+    # Tam ekran cizimi
+    def draw_overlay(widget, cr):
+        allocation = widget.get_allocation()
+
+        cr.set_operator(cairo.OPERATOR_SOURCE)
+        cr.set_source_rgba(RED, GREEN, BLUE, OPACITY)
+
+        # Tum cizim alanini kapla; kenarlarda bosluk birakma.
+        cr.rectangle(
+            0,
+            0,
+            allocation.width,
+            allocation.height
+        )
+        cr.fill()
+
+        return False
+
+    def enforce_fullscreen():
+        if window is None:
+            return False
+
+        # Pencereyi tam ekran olarak tekrar uygula.
+        window.fullscreen()
+
+        gdk_window = window.get_window()
+        if gdk_window is not None:
+            gdk_window.raise_()
+
+        return False
 
     def create_overlay():
-        build_overlay(screen, visual)
+        nonlocal window
 
-    def build_overlay(screen, visual):
-        # The overlay window is created only after compositing is active.
-        create_window(screen, visual)
+        current_screen = Gdk.Screen.get_default()
 
-    def create_window(screen, visual):
-        pass
+        if current_screen is None:
+            return False
 
-    window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
-    window.set_title("Night Screen Overlay")
-    window.set_visual(visual)
-    window.set_app_paintable(True)
-    window.set_decorated(False)
-    window.set_resizable(False)
-    window.set_accept_focus(False)
-    window.set_focus_on_map(False)
-    window.set_keep_above(True)
-    window.set_skip_taskbar_hint(True)
-    window.set_skip_pager_hint(True)
-    window.stick()
+        if not is_wayland and not current_screen.is_composited():
+            if time.monotonic() - started >= 20:
+                print("ERROR: X11 compositor did not become ready.")
+                Gtk.main_quit()
+                return False
 
-    def draw(widget, cr):
-        allocation = widget.get_allocation()
-        cr.set_operator(cairo.OPERATOR_SOURCE)
-        cr.set_source_rgba(1.0, 0.48, 0.12, OPACITY)
-        cr.rectangle(0, 0, allocation.width, allocation.height)
-        cr.fill()
-        return True
+            return True
 
-    window.connect("draw", draw)
+        # Ekran boyutlarini al.
+        monitor = current_screen.get_primary_monitor()
 
-    def click_through(widget, *args):
-        gdk_window = widget.get_window()
-        if gdk_window is not None:
-            region = cairo.Region()
-            gdk_window.input_shape_combine_region(region, 0, 0)
+        if monitor < 0:
+            monitor = 0
 
-    window.connect("realize", click_through)
-    window.connect("map-event", click_through)
+        geometry = current_screen.get_monitor_geometry(monitor)
+        screen_width = geometry.width
+        screen_height = geometry.height
 
-    def cleanup(*args):
-        try:
-            PID_FILE.unlink(missing_ok=True)
-        except OSError:
-            pass
+        window = Gtk.Window(type=Gtk.WindowType.TOPLEVEL)
 
-        Gtk.main_quit()
-        return GLib.SOURCE_REMOVE
+        window.set_title("Night Screen Overlay")
+        window.set_decorated(False)
+        window.set_resizable(False)
+        window.set_keep_above(True)
+        window.set_accept_focus(False)
+        window.set_focus_on_map(False)
+        window.set_app_paintable(True)
 
-    window.connect("destroy", cleanup)
+        # Kenar ve boyut sorunlarini onlemek icin
+        # pencereyi ekran boyutlarinda olustur.
+        window.set_default_size(screen_width, screen_height)
+        window.set_size_request(screen_width, screen_height)
+        window.set_position(Gtk.WindowPosition.NONE)
 
-    GLib.unix_signal_add(
-        GLib.PRIORITY_DEFAULT, signal.SIGTERM, cleanup
-    )
-    GLib.unix_signal_add(
-        GLib.PRIORITY_DEFAULT, signal.SIGINT, cleanup
-    )
+        visual = current_screen.get_rgba_visual()
 
-    window.show_all()
+        if visual is not None:
+            window.set_visual(visual)
 
-    # Use the complete screen geometry and fullscreen the overlay.
-    window.set_resizable(True)
-    window.set_default_size(screen.get_width(), screen.get_height())
-    window.fullscreen_on_monitor(screen, 0)
-    window.show()
-    window.present()
+        window.connect("draw", draw_overlay)
 
-    # Reapply fullscreen after the window is mapped.
-    def enforce_fullscreen():
+        # Ekranin sol ust koordinatina yerlestir.
+        window.move(geometry.x, geometry.y)
+
+        # Once goster, sonra tam ekran modunu uygula.
+        window.show_all()
         window.fullscreen()
-        window.queue_draw()
-        return GLib.SOURCE_REMOVE
 
-    GLib.timeout_add(1000, enforce_fullscreen)
+        # Pencere yoneticisinin boyutu degistirmesine karsi
+        # tam ekrani bir kez daha uygula.
+        GLib.timeout_add(500, enforce_fullscreen)
 
-    PID_FILE.write_text(str(os.getpid()))
-    Gtk.main()
+        print(
+            f"Overlay active: {screen_width}x{screen_height}, "
+            f"opacity={OPACITY}"
+        )
+
+        return False
+
+    GLib.timeout_add(250, create_overlay)
 
     try:
-        PID_FILE.unlink(missing_ok=True)
-    except OSError:
-        pass
+        Gtk.main()
+    finally:
+        try:
+            if PID_FILE.exists():
+                current_pid = int(PID_FILE.read_text().strip())
+
+                if current_pid == os.getpid():
+                    PID_FILE.unlink(missing_ok=True)
+        except (ValueError, OSError):
+            pass
+
+    return 0
 
 
 if __name__ == "__main__":
@@ -175,8 +265,7 @@ if __name__ == "__main__":
     elif command == "stop":
         stop()
     elif command == "run":
-        run()
+        sys.exit(run())
     else:
-        raise SystemExit(
-            "Usage: night-screen-overlay.py [start|stop|run]"
-        )
+        print("Usage: night-screen-overlay.py [start|stop|run]")
+        sys.exit(1)
