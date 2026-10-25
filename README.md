@@ -64,8 +64,11 @@ sudo pacman -S --needed python python-pip python-pipx
 ```
 sudo apt update
 sudo apt install -y python3-gi gir1.2-gtk-3.0 python3-cairo libnotify-bin xcompmgr
-```
-```
+
+cd ~
+git clone https://github.com/FURK4NGG/hyprshade.git
+cd hyprshade
+
 mkdir -p ~/.local/bin ~/.config/scripts ~/.config/systemd/user
 
 cp ./night-screen-overlay.py ~/.local/bin/
