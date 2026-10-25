@@ -39,6 +39,7 @@ Other Wayland compositors and desktop environments have not been verified yet.
    
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
 ```
+cd ~
 git clone https://github.com/FURK4NGG/hyprshade.git
 cd hyprshade
 mkdir -p ~/.local/bin
