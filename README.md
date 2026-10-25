@@ -38,11 +38,11 @@ Other Wayland compositors and desktop environments have not been verified yet.
 <summary>Arch</summary>
    
 Directory Structure  
-~/.local/bin/  
-└── hyprshade-auto.sh  
-
 ~/.config/scripts/  
 └── hyprshade-toggle-state (This file is auto-generated)  
+
+~/.local/bin/  
+└── hyprshade-auto.sh  
 <br>
    
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
