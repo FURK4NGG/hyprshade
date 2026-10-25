@@ -268,6 +268,3 @@ if __name__ == "__main__":
     else:
         print("Usage: night-screen-overlay.py [start|stop|run]")
         sys.exit(1)
-PYTHON
-
-chmod +x ~/.local/bin/night-screen-overlay.py
