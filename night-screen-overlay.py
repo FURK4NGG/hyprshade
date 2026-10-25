@@ -18,10 +18,10 @@ BASE = Path.home() / ".cache"
 PID_FILE = BASE / "night-screen-overlay.pid"
 LOG_FILE = BASE / "night-screen-overlay.log"
 
-# Filtre ayarlari
+# Filter settings
 OPACITY = 0.12
 
-# Acik turuncu
+# Light orange
 RED = 1.00
 GREEN = 0.60
 BLUE = 0.28
@@ -112,7 +112,7 @@ def run():
         or bool(os.environ.get("WAYLAND_DISPLAY"))
     )
 
-    # X11 icin compositor kontrolu
+    # Check the compositor on X11
     if not is_wayland and not screen.is_composited():
         print("Starting X11 compositor...")
 
@@ -142,14 +142,14 @@ def run():
     started = time.monotonic()
     window = None
 
-    # Tam ekran cizimi
+    # Fullscreen drawing
     def draw_overlay(widget, cr):
         allocation = widget.get_allocation()
 
         cr.set_operator(cairo.OPERATOR_SOURCE)
         cr.set_source_rgba(RED, GREEN, BLUE, OPACITY)
 
-        # Tum cizim alanini kapla; kenarlarda bosluk birakma.
+        # Cover the entire drawing area without leaving gaps at the edges.
         cr.rectangle(
             0,
             0,
@@ -164,7 +164,7 @@ def run():
         if window is None:
             return False
 
-        # Pencereyi tam ekran olarak tekrar uygula.
+        # Reapply fullscreen mode.
         window.fullscreen()
 
         gdk_window = window.get_window()
@@ -189,7 +189,7 @@ def run():
 
             return True
 
-        # Ekran boyutlarini al.
+        # Get the screen dimensions.
         monitor = current_screen.get_primary_monitor()
 
         if monitor < 0:
@@ -209,8 +209,8 @@ def run():
         window.set_focus_on_map(False)
         window.set_app_paintable(True)
 
-        # Kenar ve boyut sorunlarini onlemek icin
-        # pencereyi ekran boyutlarinda olustur.
+        # Create the window using the screen dimensions
+        # to prevent size and edge issues.
         window.set_default_size(screen_width, screen_height)
         window.set_size_request(screen_width, screen_height)
         window.set_position(Gtk.WindowPosition.NONE)
@@ -222,15 +222,14 @@ def run():
 
         window.connect("draw", draw_overlay)
 
-        # Ekranin sol ust koordinatina yerlestir.
+        # Position the window at the top-left corner of the screen.
         window.move(geometry.x, geometry.y)
 
-        # Once goster, sonra tam ekran modunu uygula.
+        # Show the window first, then apply fullscreen mode.
         window.show_all()
         window.fullscreen()
 
-        # Pencere yoneticisinin boyutu degistirmesine karsi
-        # tam ekrani bir kez daha uygula.
+        # Reapply fullscreen mode in case the window manager resizes the window.
         GLib.timeout_add(500, enforce_fullscreen)
 
         print(
@@ -269,3 +268,6 @@ if __name__ == "__main__":
     else:
         print("Usage: night-screen-overlay.py [start|stop|run]")
         sys.exit(1)
+PYTHON
+
+chmod +x ~/.local/bin/night-screen-overlay.py
