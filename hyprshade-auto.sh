@@ -39,7 +39,7 @@ apply_filter() {
     case "$(get_backend)" in
         native)
             command -v hyprshade >/dev/null 2>&1 || {
-                echo "[ERROR] hyprshade komutu bulunamadı." >&2
+                echo "[ERROR] The hyprshade command was not found." >&2
                 return 1
             }
 
@@ -48,7 +48,7 @@ apply_filter() {
 
         overlay)
             [[ -f "$OVERLAY" ]] || {
-                echo "[ERROR] Overlay dosyası bulunamadı: $OVERLAY" >&2
+                echo "[ERROR] Overlay script was not found: $OVERLAY" >&2
                 return 1
             }
 
@@ -56,7 +56,7 @@ apply_filter() {
             ;;
 
         *)
-            echo "[ERROR] Geçersiz backend: $(get_backend)" >&2
+            echo "[ERROR] Invalid backend: $(get_backend)" >&2
             return 1
             ;;
     esac
@@ -70,7 +70,7 @@ disable_filter() {
 
         overlay)
             [[ -f "$OVERLAY" ]] || {
-                echo "[ERROR] Overlay dosyası bulunamadı: $OVERLAY" >&2
+                echo "[ERROR] Overlay script was not found: $OVERLAY" >&2
                 return 1
             }
 
@@ -78,7 +78,7 @@ disable_filter() {
             ;;
 
         *)
-            echo "[ERROR] Geçersiz backend: $(get_backend)" >&2
+            echo "[ERROR] Invalid backend: $(get_backend)" >&2
             return 1
             ;;
     esac
@@ -108,7 +108,7 @@ apply_current_state() {
             apply_filter
             ;;
         *)
-            echo "[ERROR] Geçersiz mod: $(get_state)" >&2
+            echo "[ERROR] Invalid mode: $(get_state)" >&2
             return 1
             ;;
     esac
@@ -128,13 +128,13 @@ if [[ "$ARG" == "backend" ]]; then
             ;;
         overlay)
             [[ -f "$OVERLAY" ]] || {
-                echo "[ERROR] Overlay dosyası bulunamadı: $OVERLAY" >&2
+                echo "[ERROR] Overlay script was not found: $OVERLAY" >&2
                 exit 1
             }
             printf 'overlay\n' > "$BACKEND_FILE"
             ;;
         *)
-            echo "Kullanım: $0 backend {native|overlay}" >&2
+            echo "Usage: $0 backend {native|overlay}" >&2
             exit 2
             ;;
     esac
@@ -157,14 +157,14 @@ printf '%s\n' "$NEXT" > "$STATE_FILE"
 case "$NEXT" in
     0)
         apply_auto
-        notify "Otomatik mod etkin"
+        notify "Automatic mode enabled"
         ;;
     1)
         disable_filter
-        notify "Filtre kapatıldı"
+        notify "Filter disabled"
         ;;
     2)
         apply_filter
-        notify "Filtre sürekli açık"
+        notify "Filter always enabled"
         ;;
 esac
