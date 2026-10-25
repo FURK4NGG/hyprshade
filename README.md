@@ -100,8 +100,9 @@ Stop filter
 ```
 python3 ~/.local/bin/night-screen-overlay.py stop
 ```
+<br><br>
 </details>
-<br><br><br>
+<br>
 
 Fedora
 ```
