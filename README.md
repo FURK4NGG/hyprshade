@@ -8,6 +8,9 @@ the day.
 
 ![hyprshade Demo GIF](https://github.com/FURK4NGG/hyprshade/blob/main/%7B%7D/hyprshade.gif)
 
+
+![hyprshade_install Demo Image](https://github.com/FURK4NGG/hyprshade/blob/main/%7B%7D/hyprshade_install.webp)
+
 <br><br>
 
 ✅ Works On  
