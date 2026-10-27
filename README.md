@@ -45,7 +45,8 @@ Directory Structure
 └── hyprshade-toggle-state (This file is auto-generated)  
 
 ~/.local/bin/  
-└── hyprshade-auto.sh  
+├── hyprshade-auto.sh  
+└── night-screen-overlay.py  
 <br>
    
 `Go to the`[`Hyprshade 4.0.1`](https://github.com/loqusion/hyprshade/releases?utm_source=chatgpt.com)`and download exact version`
